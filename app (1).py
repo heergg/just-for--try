@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load CSVs
 df = pd.read_csv("riasec_30_questions.csv")
-meanings_df = pd.read_csv("riasec_meanings.csv")  # RIASEC meanings CSV
+meanings_df = pd.read_csv("riasec_meanings.csv.csv")  # RIASEC meanings CSV
 
 st.title("RIASEC Interest Test 🎯")
 st.write("Rate each activity based on **how much you would enjoy doing it**.")
