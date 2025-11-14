@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 
 # Load your CSV
-df = pd.read_csv("/content/riasec_30_questions.csv")
+df = pd.read_csv("riasec_30_questions.csv")
+
 
 st.title("RIASEC Interest Test 🎯")
 
