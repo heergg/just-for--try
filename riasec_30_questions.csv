@@ -1,0 +1,31 @@
+ID,Question,Dimension
+1,I enjoy working with tools or machinery.,R
+2,I like fixing mechanical things.,R
+3,I prefer hands-on tasks over desk work.,R
+4,I am comfortable working outdoors.,R
+5,I enjoy physical activities or building things.,R
+6,I enjoy solving complex problems.,I
+7,I like doing research or experiments.,I
+8,I prefer tasks that require analysis.,I
+9,I enjoy learning scientific concepts.,I
+10,I like exploring how things work.,I
+11,"I enjoy drawing, writing, or creative arts.",A
+12,I like expressing ideas creatively.,A
+13,I prefer unstructured and flexible tasks.,A
+14,I enjoy designing visual content.,A
+15,I like activities that involve imagination.,A
+16,I enjoy helping others learn or grow.,S
+17,I am comfortable working with people.,S
+18,"I like teaching, counseling, or supporting others.",S
+19,I enjoy teamwork and group activities.,S
+20,I prefer roles that involve communication.,S
+21,I enjoy leading or persuading others.,E
+22,I like managing projects or people.,E
+23,I prefer competitive environments.,E
+24,I enjoy making business decisions.,E
+25,I like starting initiatives or taking charge.,E
+26,I enjoy organizing files or data.,C
+27,I like tasks that require accuracy.,C
+28,I prefer structured and routine work.,C
+29,I enjoy working with numbers or records.,C
+30,I like following clear rules and procedures.,C
