@@ -1,15 +1,13 @@
 import streamlit as st
 import pandas as pd
 
-# Load your CSV
+# Load CSV
 df = pd.read_csv("riasec_30_questions.csv")
 
-
 st.title("RIASEC Interest Test 🎯")
+st.write("Rate each activity based on **how much you would enjoy doing it**.")
 
-st.write("Please rate each activity based on **how much you would enjoy doing it**.")
-
-# Step-1 Options with Emojis
+# Emoji Options
 options = {
     1: "😐 Not at all",
     2: "🙂 Slightly",
@@ -18,28 +16,64 @@ options = {
     5: "🤩 Extremely"
 }
 
-user_responses = {}
+# Initialize session state
+if "index" not in st.session_state:
+    st.session_state.index = 0   # current question
+if "responses" not in st.session_state:
+    st.session_state.responses = {}
 
-# Loop through questions
-for idx, row in df.iterrows():
-    st.markdown(f"### **{row['ID']}. {row['Question']}**")
+# If all questions are done
+if st.session_state.index >= len(df):
 
-    # Slider replaced with radio buttons (for emojis)
-    choice = st.radio(
-        "How much would you enjoy this activity?",
-        list(options.keys()),
-        format_func=lambda x: options[x],
-        key=row["ID"]
-    )
+    # Add scores to dataframe
+    df["Score"] = df["ID"].map(st.session_state.responses)
+    scores = df.groupby("Dimension")["Score"].sum().to_dict()
 
-    user_responses[row["ID"]] = choice
-    st.write("---")
+    st.success("🎉 You have completed the RIASEC Test!")
+    st.subheader("📌 Your RIASEC Interest Scores")
+    st.write(scores)
 
-# Add scores to dataframe
-df["Score"] = df["ID"].map(user_responses)
+    # Generate profile
+    def generate_profile(scores):
+        sorted_dim = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        top3 = [d for d, _ in sorted_dim[:3]]
 
-# Calculate RIASEC totals
-scores = df.groupby("Dimension")["Score"].sum().to_dict()
+        return f"""
+### 🎨 Your RIASEC Interest Profile
 
-st.subheader("📌 Your RIASEC Interest Scores")
-st.write(scores)
+**Top 3 Interests:**
+1️⃣ **{top3[0]}**  
+2️⃣ **{top3[1]}**  
+3️⃣ **{top3[2]}**  
+
+**Detailed Scores:**
+- Realistic (R): {scores['R']}
+- Investigative (I): {scores['I']}
+- Artistic (A): {scores['A']}
+- Social (S): {scores['S']}
+- Enterprising (E): {scores['E']}
+- Conventional (C): {scores['C']}
+"""
+
+    st.markdown(generate_profile(scores))
+
+    st.stop()
+
+# Show current question
+row = df.iloc[st.session_state.index]
+
+st.markdown(f"## Question {row['ID']}")
+st.markdown(f"### {row['Question']}")
+
+choice = st.radio(
+    "How much would you enjoy this activity?",
+    list(options.keys()),
+    format_func=lambda x: options[x],
+    key=f"q_{row['ID']}"
+)
+
+# Save answer & go next
+if st.button("Next ➡️"):
+    st.session_state.responses[row["ID"]] = choice
+    st.session_state.index += 1
+    st.experimental_rerun()
