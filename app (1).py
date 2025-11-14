@@ -18,14 +18,17 @@ options = {
 
 # Initialize session state
 if "index" not in st.session_state:
-    st.session_state.index = 0   # current question
+    st.session_state.index = 0
 if "responses" not in st.session_state:
     st.session_state.responses = {}
 
-# If all questions are done
-if st.session_state.index >= len(df):
+def next_question():
+    st.session_state.responses[st.session_state.index] = st.session_state[f"q_{st.session_state.index}"]
+    st.session_state.index += 1
 
-    # Add scores to dataframe
+# If all questions done
+if st.session_state.index >= len(df):
+    # Assign scores
     df["Score"] = df["ID"].map(st.session_state.responses)
     scores = df.groupby("Dimension")["Score"].sum().to_dict()
 
@@ -37,14 +40,13 @@ if st.session_state.index >= len(df):
     def generate_profile(scores):
         sorted_dim = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         top3 = [d for d, _ in sorted_dim[:3]]
-
         return f"""
 ### 🎨 Your RIASEC Interest Profile
 
 **Top 3 Interests:**
 1️⃣ **{top3[0]}**  
 2️⃣ **{top3[1]}**  
-3️⃣ **{top3[2]}**  
+3️⃣ **{top3[2]}**
 
 **Detailed Scores:**
 - Realistic (R): {scores['R']}
@@ -54,26 +56,21 @@ if st.session_state.index >= len(df):
 - Enterprising (E): {scores['E']}
 - Conventional (C): {scores['C']}
 """
-
     st.markdown(generate_profile(scores))
 
-    st.stop()
+else:
+    # Display current question
+    idx = st.session_state.index
+    row = df.iloc[idx]
 
-# Show current question
-row = df.iloc[st.session_state.index]
+    st.markdown(f"## Question {row['ID']}")
+    st.markdown(f"### {row['Question']}")
 
-st.markdown(f"## Question {row['ID']}")
-st.markdown(f"### {row['Question']}")
+    st.radio(
+        "How much would you enjoy this activity?",
+        list(options.keys()),
+        format_func=lambda x: options[x],
+        key=f"q_{idx}"
+    )
 
-choice = st.radio(
-    "How much would you enjoy this activity?",
-    list(options.keys()),
-    format_func=lambda x: options[x],
-    key=f"q_{row['ID']}"
-)
-
-# Save answer & go next
-if st.button("Next ➡️"):
-    st.session_state.responses[row["ID"]] = choice
-    st.session_state.index += 1
-    st.experimental_rerun()
+    st.button("Next ➡️", on_click=next_question)
