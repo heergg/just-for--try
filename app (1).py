@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-# Load CSV
+# Load CSVs
 df = pd.read_csv("riasec_30_questions.csv")
+meanings_df = pd.read_csv("riasec_meanings.csv")  # RIASEC meanings CSV
 
 st.title("RIASEC Interest Test 🎯")
 st.write("Rate each activity based on **how much you would enjoy doing it**.")
@@ -36,27 +37,23 @@ if st.session_state.index >= len(df):
     st.subheader("📌 Your RIASEC Interest Scores")
     st.write(scores)
 
-    # Generate profile
-    def generate_profile(scores):
+    # Generate profile with meanings
+    def generate_profile_with_meanings(scores, meanings_df):
         sorted_dim = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         top3 = [d for d, _ in sorted_dim[:3]]
-        return f"""
-### 🎨 Your RIASEC Interest Profile
 
-**Top 3 Interests:**
-1️⃣ **{top3[0]}**  
-2️⃣ **{top3[1]}**  
-3️⃣ **{top3[2]}**
+        profile_text = "### 🎨 Your RIASEC Interest Profile\n\n**Top 3 Interests:**\n"
+        for dim in top3:
+            meaning = meanings_df.loc[meanings_df["Dimension"] == dim, "Meaning"].values[0]
+            profile_text += f"- **{dim}** → {meaning}\n"
 
-**Detailed Scores:**
-- Realistic (R): {scores['R']}
-- Investigative (I): {scores['I']}
-- Artistic (A): {scores['A']}
-- Social (S): {scores['S']}
-- Enterprising (E): {scores['E']}
-- Conventional (C): {scores['C']}
-"""
-    st.markdown(generate_profile(scores))
+        profile_text += "\n**Detailed Scores:**\n"
+        for dim, score in scores.items():
+            profile_text += f"- {dim}: {score}\n"
+
+        return profile_text
+
+    st.markdown(generate_profile_with_meanings(scores, meanings_df))
 
 else:
     # Display current question
@@ -74,3 +71,4 @@ else:
     )
 
     st.button("Next ➡️", on_click=next_question)
+
