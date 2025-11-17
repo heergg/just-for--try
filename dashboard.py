@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Combined RIASEC + TCI Dashboard", layout="wide")
 
@@ -34,13 +33,8 @@ if riasec_file and tci_file:
 
     # Bar Chart – RIASEC
     st.subheader("📊 RIASEC Score Chart")
-
-    fig1, ax1 = plt.subplots()
-    ax1.bar(riasec_df["Dimension"], riasec_df["Score"])
-    plt.xlabel("RIASEC Dimensions")
-    plt.ylabel("Scores")
-    plt.title("RIASEC Personality Scores")
-    st.pyplot(fig1)
+    riasec_chart = riasec_df.set_index("Dimension")["Score"]
+    st.bar_chart(riasec_chart)
 
     # -----------------------------
     # TCI Section
@@ -50,16 +44,11 @@ if riasec_file and tci_file:
 
     # Bar Chart – TCI
     st.subheader("📈 TCI Score Chart")
-
-    fig2, ax2 = plt.subplots()
-    ax2.bar(tci_df["Dimension"], tci_df["Score"])
-    plt.xlabel("TCI Dimensions")
-    plt.ylabel("Scores")
-    plt.title("TCI Temperament & Character Scores")
-    st.pyplot(fig2)
+    tci_chart = tci_df.set_index("Dimension")["Score"]
+    st.bar_chart(tci_chart)
 
     # -----------------------------
-    # Combined Interpretation
+    # RIASEC Interpretation
     # -----------------------------
     st.header("🔍 Combined Personality Interpretation")
 
@@ -76,6 +65,9 @@ if riasec_file and tci_file:
         }
         return f"**Top RIASEC Type: {dim} → {meanings.get(dim, 'Unknown')}**"
 
+    # -----------------------------
+    # TCI Interpretation
+    # -----------------------------
     def interpret_tci(tci_df):
         highest = tci_df.sort_values("Score", ascending=False).iloc[0]
         dim = highest["Dimension"]
@@ -108,3 +100,4 @@ and **temperament/character (TCI)** combine to create your unique personality pr
 
 else:
     st.info("Please upload both CSV files to generate your dashboard.")
+
