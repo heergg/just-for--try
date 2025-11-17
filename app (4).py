@@ -42,32 +42,41 @@ if st.session_state.index_tci >= len(df):
     st.subheader("📌 Your TCI Personality Scores")
     st.write(scores)
 
-    # Profile Generator
-    def generate_tci_profile(scores):
-        descriptions = {
-            "NS": "High novelty seekers are curious, impulsive, and always ready for new adventures.",
-            "HA": "High harm avoidance individuals are cautious, careful, and easily stressed.",
-            "RD": "Reward dependent people are warm, loving, and sensitive to social approval.",
-            "P": "Persistent individuals are determined, hard-working, and goal-oriented.",
-            "SD": "Self-directed individuals are responsible, purposeful, and motivated.",
-            "C": "Cooperative individuals are empathetic, kind, and supportive.",
-            "ST": "Self-transcendent people are spiritual, imaginative, and intuitive."
-        }
+def generate_tci_profile(scores):
+    full_names = {
+        "NS": "Novelty Seeking",
+        "HA": "Harm Avoidance",
+        "RD": "Reward Dependence",
+        "P": "Persistence",
+        "SD": "Self-Directedness",
+        "C": "Cooperativeness",
+        "ST": "Self-Transcendence"
+    }
 
-        profile = "## 🧬 Your TCI Personality Profile\n\n"
+    descriptions = {
+        "NS": "High novelty seekers are curious, spontaneous, and adventurous.",
+        "HA": "High harm avoidance individuals are cautious, careful, and easily stressed.",
+        "RD": "Reward dependent people are warm, loving, and socially sensitive.",
+        "P": "Persistent individuals are hardworking, determined, and goal-oriented.",
+        "SD": "Self-directed people are responsible, purposeful, and motivated.",
+        "C": "Cooperative individuals are empathetic, kind, and supportive.",
+        "ST": "Self-transcendent people are spiritual, imaginative, and intuitive."
+    }
 
-        for dim, score in scores.items():
-            full_name = df.loc[df.Dimension == dim, "Dimension_FullName"].iloc[0]
-            meaning = descriptions[dim]
+    profile = "## 🧬 Your TCI Personality Profile\n\n"
 
-            profile += f"""
+    for dim, score in scores.items():
+        full_name = full_names[dim]
+        meaning = descriptions[dim]
+
+        profile += f"""
 ### **{full_name} ({dim})**
 - **Score:** {score}
 - **About You:** {meaning}
 
 """
 
-        return profile
+    return profile
 
     st.markdown(generate_tci_profile(scores))
 
