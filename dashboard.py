@@ -42,6 +42,11 @@ if riasec_file and tci_file:
     st.header("🧬 TCI Temperament & Character Profile")
     st.dataframe(tci_df)
 
+    # Fix TCI Columns based on kernel state
+    # The columns are 'index -- streamlit-generated' for Dimension and '0' for Score
+    tci_df = tci_df.rename(columns={'index -- streamlit-generated': 'Dimension', 0: 'Score'})
+    tci_df = tci_df[['Dimension', 'Score']]
+
     # Bar Chart – TCI
     st.subheader("📈 TCI Score Chart")
     tci_chart = tci_df.set_index("Dimension")["Score"]
@@ -84,15 +89,15 @@ if riasec_file and tci_file:
     combined_summary = f"""
 ### ⭐ Final Combined Personality Summary
 
-**RIASEC insights:**  
-Your career interests are primarily guided by **{riasec_df.sort_values("Score", ascending=False).iloc[0]["Dimension"]}**,  
+**RIASEC insights:**
+Your career interests are primarily guided by **{riasec_df.sort_values("Score", ascending=False).iloc[0]["Dimension"]}**,
 showing the type of work you naturally enjoy.
 
-**TCI insights:**  
-Your temperament is shaped strongly by **{tci_df.sort_values("Score", ascending=False).iloc[0]["Dimension"]}**,  
+**TCI insights:**
+Your temperament is shaped strongly by **{tci_df.sort_values("Score", ascending=False).iloc[0]["Dimension"]}**,
 which reflects emotional and decision-making tendencies.
 
-Together, these tests show how your **career interests (RIASEC)**  
+Together, these tests show how your **career interests (RIASEC)**
 and **temperament/character (TCI)** combine to create your unique personality profile.
 """
 
@@ -100,4 +105,3 @@ and **temperament/character (TCI)** combine to create your unique personality pr
 
 else:
     st.info("Please upload both CSV files to generate your dashboard.")
-
