@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load TCI CSV
 try:
-    df = pd.read_csv("tci_25_questions.csv")
+    df = pd.read_csv("tci_25_questions (1).csv")
 except FileNotFoundError:
     st.error("tci_25_questions.csv not found in app folder.")
     st.stop()
