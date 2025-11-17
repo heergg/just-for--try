@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Load TCI CSV
-df = pd.read_csv("tci_25_questions.csv")
+df = pd.read_csv("tci_25_questions (1).csv")
 
 st.title("TCI Personality Test 🧠")
 st.write("Rate each statement based on **how well it describes you**.")
